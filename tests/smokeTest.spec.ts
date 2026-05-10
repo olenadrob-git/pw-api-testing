@@ -4,27 +4,6 @@ import { expect } from '../utils/custom-expect';
 import { APILogger } from '../utils/logger';
 import { createToken } from '../helpers/createToken';
 
-let authToken: string
-let title: string 
-
-test.beforeAll('Get Token', async ({api, config}, testInfo) =>{
-  //console.log('This is executed before ALL test')
-
-  //LOGIN
-  const tokenResponce = await api
-    // .path('/users/login')
-    // .body({"user":{"email": config.userEmail,"password": config.userPassword}})
-    // .postRequest(200);
-    authToken = await createToken(config.userEmail, config.userPassword)
-    
-
-  
-    //const myUuid = crypto.randomUUID();
-  const id = testInfo.workerIndex;
-  const uniqueId = `${id}-${Date.now()}`;
-  title = `Olena-CRUD-article-${uniqueId}`;
-   
-})
 
 
 test('Get Articles', async ({api}) =>{
@@ -32,7 +11,9 @@ test('Get Articles', async ({api}) =>{
     const responce = await api
         //.url('https://random.com/api')
         .path('/articles')
+        //.headers ({Authorization: authToken})
         .params({limit:10, offset:0})
+        //.clearAuth()
         .getRequest(200)
     
     expect(responce.articles.length).shouldBeLessThanOrEqual(10)
@@ -48,11 +29,16 @@ test('Get Tags', async ({api}) => {
     expect(responce.tags.length).shouldBeLessThanOrEqual(10)
 })
 
-test('Create, Update and Delete', async ({api}) =>{
+test('Create, Update and Delete', async ({api}, testInfo) =>{
+    let title: string 
+    //const myUuid = crypto.randomUUID();
+    const id = testInfo.workerIndex;
+    const uniqueId = `${id}-${Date.now()}`;
+    title = `Olena-CRUD-article-${uniqueId}`;   
+    
     // CREATE ARTICLE
     const createArticleResponce = await api
         .path('/articles')
-        .headers ({Authorization: authToken})
         .body ({
             "article": {
                 "title": title,
@@ -69,7 +55,6 @@ test('Create, Update and Delete', async ({api}) =>{
         // CHECK THAT ARTICLE IS CREATED
 const ArticleResponce = await api
         .path('/articles')
-        .headers ({Authorization: authToken})
         .params({limit:10, offset:0})
         .getRequest(200)
     expect(ArticleResponce.articles[0].title).shouldEqual(title)
@@ -78,7 +63,6 @@ const ArticleResponce = await api
     const newTitle = title+" edited "+`${Date.now()}`
     const updateArticleResponce = await api
         .path(`/articles/${slugId}`)
-        .headers ({Authorization: authToken})
         .body ({
             "article": {
                 "title": newTitle,
@@ -96,7 +80,6 @@ const ArticleResponce = await api
         // CHECK THAT ARTICLE IS UPDATED
 const updetedArticleResponce = await api
         .path('/articles')
-        .headers ({Authorization: authToken})
         .params({limit:10, offset:0})
         .getRequest(200)
     expect(updetedArticleResponce.articles[0].title).shouldEqual(newTitle)
@@ -104,13 +87,11 @@ const updetedArticleResponce = await api
     //DELETE
     await api
         .path(`/articles/${newSlugId}`)
-        .headers ({Authorization: authToken})
         .deleteRequest(204)
 
     //CHECK THAT ARTICLE IS ABSENT
 const ArticleResponceTwo = await api
         .path('/articles')
-        .headers ({Authorization: authToken})
         .params({limit:10, offset:0})
         .getRequest(200)
     expect(ArticleResponceTwo.articles[0].title).not.shouldEqual(newTitle)        

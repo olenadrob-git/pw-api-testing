@@ -1,5 +1,5 @@
 const processENV = process.env.TEST_ENV
-const env = processENV || 'qa'
+const env = processENV || 'dev'
 console.log('Test environment is: ' + env)
 
 

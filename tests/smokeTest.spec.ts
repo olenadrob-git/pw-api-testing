@@ -1,6 +1,6 @@
 //import { url } from 'node:inspector';
 import { test } from '../utils/fixtures';
-import { expect } from '@playwright/test';
+import { expect } from '../utils/custom-expect';
 import { APILogger } from '../utils/logger';
 
 let authToken: string
@@ -13,7 +13,7 @@ test.beforeAll('Get Token', async ({api}, testInfo) =>{
   const tokenResponce = await api
     .path('/users/login')
     .body({"user":{"email":"olenatest@test.com","password":"!234rota"}})
-    .postRequest(200)
+    .postRequest(200);
 
     
     authToken = 'Token ' + tokenResponce.user.token
@@ -33,8 +33,8 @@ test('Get Articles', async ({api}) =>{
         .params({limit:10, offset:0})
         .getRequest(200)
     
-    expect(responce.articles.length).toBeLessThanOrEqual(10)
-    expect(responce.articlesCount).toEqual(10)
+    expect(responce.articles.length).shouldBeLessThanOrEqual(10)
+    expect(responce.articlesCount).shouldEqual(10)
        
 
 })
@@ -44,8 +44,8 @@ test('Get Tags', async ({api}) => {
         .path('/tags')
         .getRequest(200)
     console.log(responce)
-    expect(responce.tags[0]).toEqual('Test')
-    expect(responce.tags.length).toBeLessThanOrEqual(10)
+    expect(responce.tags[0]).shouldEqual('Test')
+    expect(responce.tags.length).shouldBeLessThanOrEqual(10)
 })
 
 test('Create, Update and Delete', async ({api}) =>{
@@ -58,11 +58,11 @@ test('Create, Update and Delete', async ({api}) =>{
                 "title": title,
                 "description": `API CRUD whats about olena  ${Date.now()}`,
                 "body": `API Main text olena ${Date.now()}`,
-                "tagList": ["Olena"], ["Git"]
-                },
+                "tagList": ["Olena"]
+                }
         })
         .postRequest(201)
-    expect(createArticleResponce.article.title).toEqual(title)
+    expect(createArticleResponce.article.title).shouldEqual(title)
     const slugId = createArticleResponce.article.slug
     console.log(createArticleResponce.article.description)
     
@@ -72,7 +72,7 @@ const ArticleResponce = await api
         .headers ({Authorization: authToken})
         .params({limit:10, offset:0})
         .getRequest(200)
-    expect(ArticleResponce.articles[0].title).toEqual(title)
+    expect(ArticleResponce.articles[0].title).shouldEqual(title)
 
         //UPDATE ARTICLE
     const newTitle = title+" edited "+`${Date.now()}`
@@ -88,7 +88,7 @@ const ArticleResponce = await api
                 },
         })
         .putRequest(200)
-    expect(updateArticleResponce.article.title).toEqual(newTitle)
+    expect(updateArticleResponce.article.title).shouldEqual(newTitle)
     const newSlugId = updateArticleResponce.article.slug
     console.log(newSlugId)
     console.log(updateArticleResponce.article.description)
@@ -99,7 +99,7 @@ const updetedArticleResponce = await api
         .headers ({Authorization: authToken})
         .params({limit:10, offset:0})
         .getRequest(200)
-    expect(updetedArticleResponce.articles[0].title).toEqual(newTitle)
+    expect(updetedArticleResponce.articles[0].title).shouldEqual(newTitle)
 
     //DELETE
     await api
@@ -113,6 +113,6 @@ const ArticleResponceTwo = await api
         .headers ({Authorization: authToken})
         .params({limit:10, offset:0})
         .getRequest(200)
-    expect(ArticleResponceTwo.articles[0].title).not.toEqual(newTitle)        
+    expect(ArticleResponceTwo.articles[0].title).not.shouldEqual(newTitle)        
 
 })

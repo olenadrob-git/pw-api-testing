@@ -6,6 +6,7 @@ import { config } from '../api-test.config';
 
 export type TestOptions = {
     api: RequestHandler
+    config: typeof config
 }
 
 
@@ -16,5 +17,8 @@ export const  test = base.extend<TestOptions>({
         const requestHandler = new RequestHandler(request, config.apiUrl, logger) // executed before test
         await use(requestHandler)
          // executed after the test 
+    },
+    config: async ({}, use) => {
+        await use(config)
     }
 })

@@ -6,18 +6,19 @@ import { APILogger } from '../utils/logger';
 let authToken: string
 let title: string 
 
-test.beforeAll('Get Token', async ({api}, testInfo) =>{
+test.beforeAll('Get Token', async ({api, config}, testInfo) =>{
   //console.log('This is executed before ALL test')
 
   //LOGIN
   const tokenResponce = await api
     .path('/users/login')
-    .body({"user":{"email":"olenatest@test.com","password":"!234rota"}})
+    .body({"user":{"email": config.userEmail,"password": config.userPassword}})
     .postRequest(200);
-
-    
     authToken = 'Token ' + tokenResponce.user.token
-  //const myUuid = crypto.randomUUID();
+    
+
+  
+    //const myUuid = crypto.randomUUID();
   const id = testInfo.workerIndex;
   const uniqueId = `${id}-${Date.now()}`;
   title = `Olena-CRUD-article-${uniqueId}`;
@@ -35,8 +36,6 @@ test('Get Articles', async ({api}) =>{
     
     expect(responce.articles.length).shouldBeLessThanOrEqual(10)
     expect(responce.articlesCount).shouldEqual(10)
-       
-
 })
 
 test('Get Tags', async ({api}) => {

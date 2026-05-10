@@ -6,7 +6,7 @@ export class RequestHandler {
    
     private request: APIRequestContext
     private logger: APILogger
-    private baseUrl: string
+    private baseUrl: string | undefined
     private defaultBaseUrl: string 
     private apiPath: string = ''
     private queryParams: object = {}
@@ -52,6 +52,7 @@ export class RequestHandler {
     const responce = await this.request.get(url, {
         headers: this.apiHeaders
     })
+    this.cleanupFields()
     const actualStatus = responce.status()
     const responceJSON = await responce.json()
     this.logger.logResponce(actualStatus,responceJSON)
@@ -68,7 +69,7 @@ export class RequestHandler {
         headers: this.apiHeaders,
         data: this.apiBody
     })
-
+    this.cleanupFields()
     const actualStatus = responce.status()
     const responceJSON = await responce.json()
 
@@ -85,6 +86,7 @@ export class RequestHandler {
         headers: this.apiHeaders,
         data: this.apiBody
     })
+    this.cleanupFields()
     const actualStatus = responce.status()
     const responceJSON = await responce.json()
     this.logger.logResponce(actualStatus,responceJSON)
@@ -99,6 +101,7 @@ export class RequestHandler {
     const responce = await this.request.delete(url, {
         headers: this.apiHeaders
     })
+    this.cleanupFields()
     const actualStatus = responce.status()
     this.logger.logResponce(actualStatus)
     this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)   
@@ -120,6 +123,14 @@ export class RequestHandler {
             throw error
             
         }
+    }
+
+    private cleanupFields(){
+        this.apiBody = {}
+        this.apiHeaders = {}
+        this.baseUrl = undefined
+        this.apiPath = ''
+        this.queryParams = {}
     }
 
 

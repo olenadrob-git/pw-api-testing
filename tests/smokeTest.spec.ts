@@ -2,6 +2,7 @@
 import { test } from '../utils/fixtures';
 import { expect } from '../utils/custom-expect';
 import { APILogger } from '../utils/logger';
+import { createToken } from '../helpers/createToken';
 
 let authToken: string
 let title: string 
@@ -11,10 +12,10 @@ test.beforeAll('Get Token', async ({api, config}, testInfo) =>{
 
   //LOGIN
   const tokenResponce = await api
-    .path('/users/login')
-    .body({"user":{"email": config.userEmail,"password": config.userPassword}})
-    .postRequest(200);
-    authToken = 'Token ' + tokenResponce.user.token
+    // .path('/users/login')
+    // .body({"user":{"email": config.userEmail,"password": config.userPassword}})
+    // .postRequest(200);
+    authToken = await createToken(config.userEmail, config.userPassword)
     
 
   

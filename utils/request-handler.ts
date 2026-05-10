@@ -107,12 +107,12 @@ export class RequestHandler {
     this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)   
    }
 
-   private getUrl(){
-    const url = new URL(`${this.baseUrl ?? this.defaultBaseUrl}${this.apiPath}`)
-    for( const [key, value] of Object.entries(this.queryParams)){
-        url.searchParams.append(key, value)
-    }
-    return url.toString()
+    private getUrl() {
+        const url = new URL(`${this.baseUrl ?? this.defaultBaseUrl}${this.apiPath}`)
+        for( const [key, value] of Object.entries(this.queryParams)){
+            url.searchParams.append(key, value)
+        }
+        return url.toString()
     }
    
     private statusCodeValidator(actualStatus: number, expectStatus: number, callingMethod: Function) {

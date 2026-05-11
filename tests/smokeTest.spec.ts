@@ -3,6 +3,7 @@ import { test } from '../utils/fixtures';
 import { expect } from '../utils/custom-expect';
 import { APILogger } from '../utils/logger';
 import { createToken } from '../helpers/createToken';
+import { validateSchema } from '../utils/schema-validator';
 
 
 
@@ -24,7 +25,10 @@ test('Get Tags', async ({api}) => {
     const responce = await api
         .path('/tags')
         .getRequest(200)
-    console.log(responce)
+    //console.log(responce)
+
+    await validateSchema('/tags', 'GET_tags')
+    
     expect(responce.tags[0]).shouldEqual('Test')
     expect(responce.tags.length).shouldBeLessThanOrEqual(10)
 })

@@ -9,7 +9,7 @@ import { createToken } from '../helpers/createToken';
 test('Get Articles', async ({api}) =>{
  
     const responce = await api
-        .url('https://random.com/api')
+        //.url('https://random.com/api')
         .path('/articles')
         //.headers ({Authorization: authToken})
         .params({limit:10, offset:0})

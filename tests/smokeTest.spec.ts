@@ -26,9 +26,7 @@ test('Get Tags', async ({api}) => {
         .path('/tags')
         .getRequest(200)
     //console.log(responce)
-
-    await validateSchema('/tags', 'GET_tags', responce)
-    
+    expect(responce).shouldMatchSchema('tags','GET_tags')  
     expect(responce.tags[0]).shouldEqual('Test')
     expect(responce.tags.length).shouldBeLessThanOrEqual(10)
 })

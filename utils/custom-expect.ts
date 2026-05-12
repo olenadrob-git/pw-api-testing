@@ -13,18 +13,19 @@ declare global {
         interface Matchers<R, T>{
             shouldEqual(expected:T): R
             shouldBeLessThanOrEqual(expected:T): R
-            shouldMatchSchema(dirName:string, fileName:string): Promise<R>
+            shouldMatchSchema(dirName:string, fileName:string, createSchemaFlag?:boolean): Promise<R>
         }
     }
 }
 
+// change false to true in createSchemaFlag in order to update aal  schemas here and in schema-validator.ts
 export const expect = baseExpect.extend({
-    async shouldMatchSchema(received: any, dirName:string, fileName:string){
+    async shouldMatchSchema(received: any, dirName:string, fileName:string, createSchemaFlag:boolean = false){
         let pass: boolean;
         let message: string = ''
         
         try {
-            await validateSchema(dirName, fileName, received);
+            await validateSchema(dirName, fileName, received, createSchemaFlag);
             pass = true;
             message = 'Schema validation passed'
 

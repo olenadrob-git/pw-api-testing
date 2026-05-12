@@ -1,6 +1,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import { Ajv } from "ajv"
+import { createSchema } from 'genson-js';
 
 const SCHEMA_BASE_PATH = path.resolve(
     process.cwd(),
@@ -8,8 +9,12 @@ const SCHEMA_BASE_PATH = path.resolve(
 )
 const ajv = new Ajv({allErrors: true})  // options can be passed, e.g. {allErrors: true}
 
-export async function validateSchema(dirName:string, fileName:string, responceBody: object) {
+// change false to true in createSchemaFlag in order to update aal  schemas here and in custom-expext.ts
+export async function validateSchema(dirName:string, fileName:string, responceBody: object, createSchemaFlag: boolean = false) {
     const schemaPath = path.join(SCHEMA_BASE_PATH, dirName, `${fileName}_schema.json`)
+    
+    if(createSchemaFlag) await genereteNewSchema(responceBody, schemaPath)
+    
     const schema = await loadSchema(schemaPath)
     const validate = ajv.compile(schema)
 
@@ -32,4 +37,14 @@ async function loadSchema (schemaPath:string) {
     } catch (error){
         throw new Error(`Failed to read the schema file: ${error.message}`)
     }    
+}
+
+async function genereteNewSchema(responceBody:object, schemaPath:string) {
+     try {
+            const generatedSchema = createSchema(responceBody)
+            await fs.mkdir(path.dirname(schemaPath), {recursive: true})  // creates folder if itdoesn't exist 
+            await fs.writeFile(schemaPath, JSON.stringify(generatedSchema, null, 4))
+        } catch (error) {
+            throw new Error(`Failed to create schema file: ${error.message}`)
+        }
 }

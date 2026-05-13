@@ -30,7 +30,7 @@ test('Get Tags', async ({api}) => {
         .getRequest(200)
     //console.log(responce)
     await expect(responce).shouldMatchSchema('tags','GET_tags')  // provide third parameter true to create or update the schema
-    expect(responce.tags[0]).shouldEqual('Test')
+    expect(responce.tags[0]).shouldEqual('Test123')
     expect(responce.tags.length).shouldBeLessThanOrEqual(10)
 })
 

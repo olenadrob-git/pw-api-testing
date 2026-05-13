@@ -41,8 +41,8 @@ export default defineConfig({
   projects: [
     {
       name: 'API-testing',
-      testMatch: 'example*',
-      dependencies: ['smoke-tests'] // api project will run only after smoke
+      testMatch: 'example*'
+      //dependencies: ['smoke-tests'] // api project will run only after smoke
     },
     {
       name: 'smoke-tests',

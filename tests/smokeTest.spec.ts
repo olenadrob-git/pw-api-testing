@@ -4,11 +4,11 @@ import { expect } from '../utils/custom-expect';
 import { APILogger } from '../utils/logger';
 import { createToken } from '../helpers/createToken';
 import { validateSchema } from '../utils/schema-validator';
+import articleRequestPayload from '../request-objects/POST-article.json'
 
 
 
 test('Get Articles', async ({api}) =>{
- 
     const responce = await api
         //.url('https://random.com/api')
         .path('/articles')
@@ -22,6 +22,7 @@ test('Get Articles', async ({api}) =>{
     expect(responce.articlesCount).shouldEqual(10)
 })
 
+
 test('Get Tags', async ({api}) => {
     const responce = await api
         .path('/tags')
@@ -32,27 +33,23 @@ test('Get Tags', async ({api}) => {
     expect(responce.tags.length).shouldBeLessThanOrEqual(10)
 })
 
+
 test('Create, Update and Delete', async ({api}, testInfo) =>{
-    let title: string 
+    const articleRequest = JSON.parse(JSON.stringify(articleRequestPayload))
+    //let title: string 
     //const myUuid = crypto.randomUUID();
     const id = testInfo.workerIndex;
     const uniqueId = `${id}-${Date.now()}`;
-    title = `Olena-CRUD-article-${uniqueId}`;   
+    //title = `Olena-CRUD-article-${uniqueId}`
+    articleRequest.article.title = `Olena-CRUD-article-${uniqueId}`  
     
     // CREATE ARTICLE
     const createArticleResponce = await api
         .path('/articles')
-        .body ({
-            "article": {
-                "title": title,
-                "description": `API CRUD whats about olena  ${Date.now()}`,
-                "body": `API Main text olena ${Date.now()}`,
-                "tagList": ["Olena"]
-                }
-        })
+        .body (articleRequest)
         .postRequest(201)
     await expect(createArticleResponce).shouldMatchSchema('articles','POST_articles')  // provide third parameter true to create or update the schema    
-    expect(createArticleResponce.article.title).shouldEqual(title)
+    expect(createArticleResponce.article.title).shouldEqual(articleRequest.article.title)
     const slugId = createArticleResponce.article.slug
     console.log(createArticleResponce.article.description)
     
@@ -62,7 +59,7 @@ const ArticleResponce = await api
         .params({limit:10, offset:0})
         .getRequest(200)
     await expect(ArticleResponce).shouldMatchSchema('articles','GET_articles') 
-    expect(ArticleResponce.articles[0].title).shouldEqual(title)
+    expect(ArticleResponce.articles[0].title).shouldEqual(articleRequest.article.title)
 
 
         //CHECK THE created article
@@ -70,21 +67,16 @@ const ArticleResponce = await api
             .path(`/articles/${slugId}`)
             .getRequest(200)
         await expect(ceatedArticleResponse).shouldMatchSchema('articles','GET_article')  // provide third parameter true to create or update the schema
-        expect(ceatedArticleResponse.article.title).shouldEqual(title)
+        expect(ceatedArticleResponse.article.title).shouldEqual(articleRequest.article.title)
 
 
         //UPDATE ARTICLE
-    const newTitle = title+" edited "+`${Date.now()}`
+    const newTitle = articleRequest.article.title +" edited "+`${Date.now()}`
+    articleRequestPayload.article.title = newTitle
+    
     const updateArticleResponce = await api
         .path(`/articles/${slugId}`)
-        .body ({
-            "article": {
-                "title": newTitle,
-                "description": `API CRUD edited whats about olena  ${Date.now()}`,
-                "body": `API Main text edited olena ${Date.now()}`,
-                "tagList": ["Olena, Git"]
-                },
-        })
+        .body (articleRequestPayload)
         .putRequest(200)
         
     await expect(updateArticleResponce).shouldMatchSchema('articles','PUT_articles')  // provide third parameter true to create or update the schema    

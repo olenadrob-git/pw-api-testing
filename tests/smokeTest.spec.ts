@@ -5,6 +5,8 @@ import { APILogger } from '../utils/logger';
 import { createToken } from '../helpers/createToken';
 import { validateSchema } from '../utils/schema-validator';
 import articleRequestPayload from '../request-objects/POST-article.json'
+import { faker } from '@faker-js/faker';
+import { getNewRandomArticle } from '../utils/data-generator';
 
 
 
@@ -33,15 +35,11 @@ test('Get Tags', async ({api}) => {
     expect(responce.tags.length).shouldBeLessThanOrEqual(10)
 })
 
-
-test('Create, Update and Delete', async ({api}, testInfo) =>{
-    const articleRequest = JSON.parse(JSON.stringify(articleRequestPayload))
-    //let title: string 
-    //const myUuid = crypto.randomUUID();
-    const id = testInfo.workerIndex;
-    const uniqueId = `${id}-${Date.now()}`;
-    //title = `Olena-CRUD-article-${uniqueId}`
-    articleRequest.article.title = `Olena-CRUD-article-${uniqueId}`  
+test('Create and Delete', async ({api} ) =>{
+    //const articleTitle = faker.lorem.sentence(5)
+    //const articleRequest = JSON.parse(JSON.stringify(articleRequestPayload)) //clone version of file
+    // articleRequest.article.title = articleTitle
+    const articleRequest = getNewRandomArticle() //clone version of file
     
     // CREATE ARTICLE
     const createArticleResponce = await api
@@ -51,7 +49,54 @@ test('Create, Update and Delete', async ({api}, testInfo) =>{
     await expect(createArticleResponce).shouldMatchSchema('articles','POST_articles')  // provide third parameter true to create or update the schema    
     expect(createArticleResponce.article.title).shouldEqual(articleRequest.article.title)
     const slugId = createArticleResponce.article.slug
-    console.log(createArticleResponce.article.description)
+    console.log(createArticleResponce.article)
+    
+    // CHECK THAT ARTICLE IS CREATED
+    const ArticleResponce = await api
+        .path('/articles')
+        .params({limit:10, offset:0})
+        .getRequest(200)
+    await expect(ArticleResponce).shouldMatchSchema('articles','GET_articles') 
+    expect(ArticleResponce.articles[0].title).shouldEqual(articleRequest.article.title)
+    
+
+        //CHECK THE created article
+      const createdArticleResponse = await api
+            .path(`/articles/${slugId}`)
+            .getRequest(200)
+        await expect(createdArticleResponse).shouldMatchSchema('articles','GET_article')  // provide third parameter true to create or update the schema
+        expect(createdArticleResponse.article.title).shouldEqual(articleRequest.article.title)
+
+    
+    //DELETE
+    await api
+        .path(`/articles/${slugId}`)
+        .deleteRequest(204)
+
+    //CHECK THAT ARTICLE IS ABSENT
+    const ArticleResponceTwo = await api
+        .path('/articles')
+        .params({limit:10, offset:0})
+        .getRequest(200)
+    
+    expect(ArticleResponceTwo.articles[0].title).not.shouldEqual(articleRequest.article.title)        
+
+})
+
+test('Create, Update and Delete', async ({api}) =>{
+    const articleTitle = faker.lorem.sentence(5)
+    const articleRequest = JSON.parse(JSON.stringify(articleRequestPayload)) //copy version of file
+    articleRequest.article.title = articleTitle  
+    
+    // CREATE ARTICLE
+    const createArticleResponce = await api
+        .path('/articles')
+        .body (articleRequest)
+        .postRequest(201)
+    await expect(createArticleResponce).shouldMatchSchema('articles','POST_articles')  // provide third parameter true to create or update the schema    
+    expect(createArticleResponce.article.title).shouldEqual(articleTitle)
+    const slugId = createArticleResponce.article.slug
+    console.log(createArticleResponce.article.title)
     
         // CHECK THAT ARTICLE IS CREATED
 const ArticleResponce = await api
@@ -59,20 +104,20 @@ const ArticleResponce = await api
         .params({limit:10, offset:0})
         .getRequest(200)
     await expect(ArticleResponce).shouldMatchSchema('articles','GET_articles') 
-    expect(ArticleResponce.articles[0].title).shouldEqual(articleRequest.article.title)
-
+    expect(ArticleResponce.articles[0].title).shouldEqual(articleTitle)
+    
 
         //CHECK THE created article
-      const ceatedArticleResponse = await api
+      const createdArticleResponse = await api
             .path(`/articles/${slugId}`)
             .getRequest(200)
-        await expect(ceatedArticleResponse).shouldMatchSchema('articles','GET_article')  // provide third parameter true to create or update the schema
-        expect(ceatedArticleResponse.article.title).shouldEqual(articleRequest.article.title)
+        await expect(createdArticleResponse).shouldMatchSchema('articles','GET_article')  // provide third parameter true to create or update the schema
+        expect(createdArticleResponse.article.title).shouldEqual(articleTitle)
 
 
         //UPDATE ARTICLE
-    const newTitle = articleRequest.article.title +" edited "+`${Date.now()}`
-    articleRequestPayload.article.title = newTitle
+    const articleTitleTwo = faker.lorem.sentence(4)
+    articleRequestPayload.article.title = articleTitleTwo
     
     const updateArticleResponce = await api
         .path(`/articles/${slugId}`)
@@ -80,10 +125,10 @@ const ArticleResponce = await api
         .putRequest(200)
         
     await expect(updateArticleResponce).shouldMatchSchema('articles','PUT_articles')  // provide third parameter true to create or update the schema    
-    expect(updateArticleResponce.article.title).shouldEqual(newTitle)
+    expect(updateArticleResponce.article.title).shouldEqual(articleTitleTwo)
     const newSlugId = updateArticleResponce.article.slug
     console.log(newSlugId)
-    console.log(updateArticleResponce.article.description)
+    console.log(updateArticleResponce.article.title)
 
         
             //CHECK THE UPDATED ARTICLE
@@ -91,7 +136,7 @@ const ArticleResponce = await api
             .path(`/articles/${newSlugId}`)
             .getRequest(200)
         await expect(updatedTheArticleResponce).shouldMatchSchema('articles','GET_article')  // provide third parameter true to create or update the schema
-        expect(updatedTheArticleResponce.article.title).shouldEqual(newTitle)
+        expect(updatedTheArticleResponce.article.title).shouldEqual(articleTitleTwo)
     
     // CHECK THAT ARTICLE IS UPDATED IN LIST OF ARTICLES
 const updatedArticleResponce = await api
@@ -99,7 +144,7 @@ const updatedArticleResponce = await api
         .params({limit:10, offset:0})
         .getRequest(200)
     await expect(updatedArticleResponce).shouldMatchSchema('articles','GET_articles')  // provide third parameter true to create or update the schema    
-    expect(updatedArticleResponce.articles[0].title).shouldEqual(newTitle)
+    expect(updatedArticleResponce.articles[0].title).shouldEqual(articleTitleTwo)
 
       
     
@@ -114,6 +159,6 @@ const ArticleResponceTwo = await api
         .params({limit:10, offset:0})
         .getRequest(200)
     
-    expect(ArticleResponceTwo.articles[0].title).not.shouldEqual(newTitle)        
+    expect(ArticleResponceTwo.articles[0].title).not.shouldEqual(articleTitleTwo)        
 
 })

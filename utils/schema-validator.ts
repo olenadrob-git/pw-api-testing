@@ -1,13 +1,16 @@
 import fs from 'fs/promises'
 import path from 'path'
 import { Ajv } from "ajv"
-import { createSchema } from 'genson-js';
+import { createSchema } from 'genson-js'
+import addFormats from "ajv-formats"
 
 const SCHEMA_BASE_PATH = path.resolve(
     process.cwd(),
     'response-schemas'
 )
 const ajv = new Ajv({allErrors: true})  // options can be passed, e.g. {allErrors: true}
+addFormats(ajv) //https://ajv.js.org/packages/ajv-formats.html 
+
 
 // change false to true in createSchemaFlag in order to update aal  schemas here and in custom-expext.ts
 export async function validateSchema(dirName:string, fileName:string, responceBody: object, createSchemaFlag: boolean = false) {
@@ -41,7 +44,7 @@ async function loadSchema (schemaPath:string) {
 
 async function genereteNewSchema(responceBody:object, schemaPath:string) {
      try {
-            const generatedSchema = createSchema(responceBody)
+            const generatedSchema = createSchema(responceBody)        
             await fs.mkdir(path.dirname(schemaPath), {recursive: true})  // creates folder if itdoesn't exist 
             await fs.writeFile(schemaPath, JSON.stringify(generatedSchema, null, 4))
         } catch (error) {

@@ -41,13 +41,13 @@ export default defineConfig({
   projects: [
     {
       name: 'API-testing',
-      testMatch: 'example*'
+      //testMatch: 'example*'
       //dependencies: ['smoke-tests'] // api project will run only after smoke
     },
-    {
-      name: 'smoke-tests',
-      testMatch: 'smoke*'
-    }
+    // {
+    //   name: 'smoke-tests',
+    //   //testMatch: 'smoke*'
+    // }
   ],
 
 });

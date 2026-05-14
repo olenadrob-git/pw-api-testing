@@ -1,5 +1,6 @@
 import { test, expect, request } from '@playwright/test';
 
+
 let authToken: string
 let title: string 
 
@@ -18,8 +19,6 @@ test.beforeAll('Run before all', async ({request}, testInfo) =>{
   title = `Olena-CRUD-article-${uniqueId}`;
     
   console.log(authToken)
-
-
 })
 
 

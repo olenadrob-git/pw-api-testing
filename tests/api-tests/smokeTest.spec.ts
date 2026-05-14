@@ -72,12 +72,12 @@ test('Create and Delete', async ({api} ) =>{
         .path(`/articles/${slugId}`)
         .deleteRequest(204)
 
-    //CHECK THAT ARTICLE IS ABSENT
+    //CHECK THAT ARTICLE IS ABSENT  IN THE LIST OF ARTICLES
     const ArticleResponceTwo = await api
         .path('/articles')
         .params({limit:10, offset:0})
         .getRequest(200)
-    
+    await expect(ArticleResponceTwo).shouldMatchSchema('articles','GET_articles')
     expect(ArticleResponceTwo.articles[0].title).not.shouldEqual(articleRequest.article.title)        
 
 })
@@ -137,12 +137,12 @@ const ArticleResponce = await api
         await expect(updatedTheArticleResponce).shouldMatchSchema('articles','GET_article')  // provide third parameter true to create or update the schema
         expect(updatedTheArticleResponce.article.title).shouldEqual(articleTitleTwo)
     
-    // CHECK THAT ARTICLE IS UPDATED IN LIST OF ARTICLES
+    // CHECK THAT ARTICLE IS UPDATED IN THE LIST OF ARTICLES
 const updatedArticleResponce = await api
         .path('/articles')
         .params({limit:10, offset:0})
         .getRequest(200)
-    await expect(updatedArticleResponce).shouldMatchSchema('articles','GET_articles')  // provide third parameter true to create or update the schema    
+    await expect(updatedArticleResponce).shouldMatchSchema('articles','GET_articles')  // provide third parameter true to create or update the schema
     expect(updatedArticleResponce.articles[0].title).shouldEqual(articleTitleTwo)
 
       
@@ -152,12 +152,12 @@ const updatedArticleResponce = await api
         .path(`/articles/${newSlugId}`)
         .deleteRequest(204)
 
-    //CHECK THAT ARTICLE IS ABSENT
+    //CHECK THAT ARTICLE IS ABSENT  IN THE LIST OF ARTICLES
 const ArticleResponceTwo = await api
         .path('/articles')
         .params({limit:10, offset:0})
         .getRequest(200)
-    
+    await expect(ArticleResponceTwo).shouldMatchSchema('articles','GET_articles')
     expect(ArticleResponceTwo.articles[0].title).not.shouldEqual(articleTitleTwo)        
 
 })

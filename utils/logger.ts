@@ -8,9 +8,9 @@ export class APILogger {
         const logEntry = {method, url, headers, body}
         this.recentLogs.push({type: 'Request Details', data: logEntry})
     }
-    logResponce(statusCode: number, body?: any  ){
+    logResponse(statusCode: number, body?: any  ){
         const logEntry = {statusCode, body}
-        this.recentLogs.push({type: 'Responce Details', data: logEntry})
+        this.recentLogs.push({type: 'Response Details', data: logEntry})
     }
 
     getRecentLogs(){

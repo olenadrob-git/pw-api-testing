@@ -18,7 +18,7 @@ import { getNewRandomArticle } from '../../utils/data-generator';
 
     test(`Error message validations for ${check}`, async ({api}) =>{
         const currentUserName = username
-        const newUserResponce = await api
+        const newUserResponse = await api
             .path('/users')
             .body({
                 "user": {
@@ -31,11 +31,11 @@ import { getNewRandomArticle } from '../../utils/data-generator';
             .postRequest(422)
         
         if(currentUserName.length >=3 && currentUserName.length <=20){
-            expect(newUserResponce.errors).not.toHaveProperty('username')
+            expect(newUserResponse.errors).not.toHaveProperty('username')
         } else {
-            expect(newUserResponce.errors.username[0]).shouldEqual(userErrorMessage)
+            expect(newUserResponse.errors.username[0]).shouldEqual(userErrorMessage)
         }       
-        // console.log(`${check} \n ${currentUserName} \n ${newUserResponce}`)
-        // console.log(newUserResponce)
+        // console.log(`${check} \n ${currentUserName} \n ${newUserResponse}`)
+        // console.log(newUserResponse)
     })
 })

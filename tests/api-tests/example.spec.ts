@@ -8,11 +8,11 @@ test.beforeAll('Run before all', async ({request}, testInfo) =>{
   console.log('This is executed before ALL test')
 
   //LOGIN
-  const tokenResponce = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
+  const tokenResponse = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
     data: {"user":{"email":"olenatest@test.com","password":"!234rota"}}
   })
-  const tokenResponceJSON = await tokenResponce.json()
-  authToken = 'Token ' + tokenResponceJSON.user.token
+  const tokenResponseJSON = await tokenResponse.json()
+  authToken = 'Token ' + tokenResponseJSON.user.token
   //const myUuid = crypto.randomUUID();
   const id = testInfo.workerIndex;
   const uniqueId = `${id}-${Date.now()}`;
@@ -46,7 +46,7 @@ test('Get All Articles', async ({request}) => {
 test('Create and delete an Article', async ({request}, testInfo) => {
  
 
-  const newArticleResponce = await request.post('https://conduit-api.bondaracademy.com/api/articles/', {
+  const newArticleResponse = await request.post('https://conduit-api.bondaracademy.com/api/articles/', {
     data: {
             "article": {
                 "title": title,
@@ -62,12 +62,12 @@ test('Create and delete an Article', async ({request}, testInfo) => {
     }
   })
 
-  const newArticleResponceJSON = await newArticleResponce.json()
+  const newArticleResponseJSON = await newArticleResponse.json()
 
-  console.log(newArticleResponceJSON)
-  expect(newArticleResponce.status()).toEqual(201)
-  expect(newArticleResponceJSON.article.title).toEqual(title)
-  const slugId = newArticleResponceJSON.article.slug
+  console.log(newArticleResponseJSON)
+  expect(newArticleResponse.status()).toEqual(201)
+  expect(newArticleResponseJSON.article.title).toEqual(title)
+  const slugId = newArticleResponseJSON.article.slug
 
   const articlesResponse = await request.get('https://conduit-api.bondaracademy.com/api/articles?limit=1&offset=0', {
     headers: {
@@ -80,18 +80,18 @@ test('Create and delete an Article', async ({request}, testInfo) => {
   //expect(articlesResponseJSON.articles[0].title).toEqual(title)
   console.log(articlesResponseJSON)
 
-  const deleteArticleResponce = await request.delete(`https://conduit-api.bondaracademy.com/api/articles/${slugId}`, {
+  const deleteArticleResponse = await request.delete(`https://conduit-api.bondaracademy.com/api/articles/${slugId}`, {
     headers: {
       Authorization: authToken
     }
 })
-  expect (deleteArticleResponce.status()).toEqual(204)
+  expect (deleteArticleResponse.status()).toEqual(204)
 })
 
 
 test('Create, Update and delete an Article', async ({request}, testInfo) => {
   // CREATE ARTICLE
-  const newArticleResponce = await request.post('https://conduit-api.bondaracademy.com/api/articles/', {
+  const newArticleResponse = await request.post('https://conduit-api.bondaracademy.com/api/articles/', {
     data: {
             "article": {
                 "title": title,
@@ -107,12 +107,12 @@ test('Create, Update and delete an Article', async ({request}, testInfo) => {
     }
   })
 
-  const newArticleResponceJSON = await newArticleResponce.json()
+  const newArticleResponseJSON = await newArticleResponse.json()
 
-  console.log(newArticleResponceJSON)
-  expect(newArticleResponce.status()).toEqual(201)
-  expect(newArticleResponceJSON.article.title).toEqual(title)
-  const slugId = newArticleResponceJSON.article.slug
+  console.log(newArticleResponseJSON)
+  expect(newArticleResponse.status()).toEqual(201)
+  expect(newArticleResponseJSON.article.title).toEqual(title)
+  const slugId = newArticleResponseJSON.article.slug
 
  //CHECK THE created article
   const ceatedArticleResponse = await request.get(`https://conduit-api.bondaracademy.com/api/articles/${slugId}`, {
@@ -128,7 +128,7 @@ test('Create, Update and delete an Article', async ({request}, testInfo) => {
 
 
   //UPDATE
-  const updateArticleResponce = await request.put(`https://conduit-api.bondaracademy.com/api/articles/${slugId}`, {
+  const updateArticleResponse = await request.put(`https://conduit-api.bondaracademy.com/api/articles/${slugId}`, {
     data: {
             "article": {
                 "title": `${title}-MODIFIED`,
@@ -143,12 +143,12 @@ test('Create, Update and delete an Article', async ({request}, testInfo) => {
       Authorization: authToken
     }
   })
-    const updateArticleResponceJSON = await updateArticleResponce.json()
+    const updateArticleResponseJSON = await updateArticleResponse.json()
     
-    expect(updateArticleResponce.status()).toEqual(200)
-    expect(updateArticleResponceJSON.article.title).toEqual(`${title}-MODIFIED`)
+    expect(updateArticleResponse.status()).toEqual(200)
+    expect(updateArticleResponseJSON.article.title).toEqual(`${title}-MODIFIED`)
 
-    const newSlugId = updateArticleResponceJSON.article.slug
+    const newSlugId = updateArticleResponseJSON.article.slug
   
 // //CHECK THE LIST2
 //   const articlesResponse2 = await request.get('https://conduit-api.bondaracademy.com/api/articles?limit=1&offset=0', {
@@ -178,12 +178,12 @@ test('Create, Update and delete an Article', async ({request}, testInfo) => {
 
 
   //DELETE
-  const deleteArticleResponce = await request.delete(`https://conduit-api.bondaracademy.com/api/articles/${newSlugId}`, {
+  const deleteArticleResponse = await request.delete(`https://conduit-api.bondaracademy.com/api/articles/${newSlugId}`, {
     headers: {
       Authorization: authToken
     }
 })
-  expect (deleteArticleResponce.status()).toEqual(204)
+  expect (deleteArticleResponse.status()).toEqual(204)
 
 })
 

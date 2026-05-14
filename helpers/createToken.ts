@@ -9,11 +9,11 @@ export async function createToken(email:string, password: string) {
     const api = new RequestHandler(context, config.apiUrl, logger)
     
     try {
-        const tokenResponce = await api
+        const tokenResponse = await api
         .path('/users/login')
         .body({"user":{"email": email,"password": password}})
         .postRequest(200);
-    return 'Token ' + tokenResponce.user.token
+    return 'Token ' + tokenResponse.user.token
     } catch(error){
         Error.captureStackTrace(error, createToken)
         throw error

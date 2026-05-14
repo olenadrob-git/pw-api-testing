@@ -13,21 +13,21 @@ addFormats(ajv) //https://ajv.js.org/packages/ajv-formats.html
 
 
 // change false to true in createSchemaFlag in order to update aal  schemas here and in custom-expext.ts
-export async function validateSchema(dirName:string, fileName:string, responceBody: object, createSchemaFlag: boolean = false) {
+export async function validateSchema(dirName:string, fileName:string, responseBody: object, createSchemaFlag: boolean = false) {
     const schemaPath = path.join(SCHEMA_BASE_PATH, dirName, `${fileName}_schema.json`)
     
-    if(createSchemaFlag) await genereteNewSchema(responceBody, schemaPath)
+    if(createSchemaFlag) await genereteNewSchema(responseBody, schemaPath)
     
     const schema = await loadSchema(schemaPath)
     const validate = ajv.compile(schema)
 
-    const valid = validate(responceBody)
+    const valid = validate(responseBody)
     if (!valid) {
         throw new Error(
             `Schema validation ${fileName}_schema.json failed:\n` +
             `${JSON.stringify(validate.errors, null, 4)}\n\n` +
             `Actual response body: \n` +
-            `${JSON.stringify(responceBody, null, 4)}`
+            `${JSON.stringify(responseBody, null, 4)}`
         )
         
     }
@@ -42,9 +42,9 @@ async function loadSchema (schemaPath:string) {
     }    
 }
 
-async function genereteNewSchema(responceBody:object, schemaPath:string) {
+async function genereteNewSchema(responseBody:object, schemaPath:string) {
      try {
-            const generatedSchema = createSchema(responceBody)        
+            const generatedSchema = createSchema(responseBody)        
             await fs.mkdir(path.dirname(schemaPath), {recursive: true})  // creates folder if itdoesn't exist 
             await fs.writeFile(schemaPath, JSON.stringify(generatedSchema, null, 4))
         } catch (error) {

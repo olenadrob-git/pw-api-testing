@@ -33,6 +33,7 @@ import { getNewRandomArticle } from '../../utils/data-generator';
         if(currentUserName.length >=3 && currentUserName.length <=20){
             expect(newUserResponse.errors).not.toHaveProperty('username')
         } else {
+            await expect(newUserResponse).shouldMatchSchema('users', 'POST_users')
             expect(newUserResponse.errors.username[0]).shouldEqual(userErrorMessage)
         }       
         // console.log(`${check} \n ${currentUserName} \n ${newUserResponse}`)

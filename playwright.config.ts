@@ -46,7 +46,7 @@ export default defineConfig({
       testDir: './tests/api-tests',
       testMatch: ['example.spec.ts', 'negativeTests.spec.ts'],
       
-      dependencies: ['api-smoke-tests'], // api project will run only after smoke
+      //dependencies: ['api-smoke-tests'], // api project will run only after smoke
     },
     {
       name: 'api-smoke-tests',

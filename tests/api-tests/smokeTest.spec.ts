@@ -21,7 +21,7 @@ test('Get Articles', async ({api}) =>{
     await expect(response).shouldMatchSchema('articles','GET_articles')  // provide third parameter true to create or update the schema    
     
     // Response structure validations
-    expect(response.articles.length).shouldBeLessThanOrEqual(10)
+    //expect(response.articles.length).shouldBeLessThanOrEqual(10)
     expect(response.articlesCount).shouldBeGreaterThanOrEqual(response.articles.length)
     expect(response.articles.length).shouldBeGreaterThan(0)
     

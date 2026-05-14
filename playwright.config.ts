@@ -42,14 +42,25 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'API-testing',
-      //testMatch: 'example*'
-      //dependencies: ['smoke-tests'] // api project will run only after smoke
+      name: 'api-testing',
+      testDir: './tests/api-tests',
+      testMatch: '*.spec.ts',
+      
+      dependencies: ['api-smoke-tests'], // api project will run only after smoke
     },
-    // {
-    //   name: 'smoke-tests',
-    //   //testMatch: 'smoke*'
-    // }
+    {
+      name: 'api-smoke-tests',
+      testDir: './tests/api-tests',
+      testMatch: 'smokeTest.spec.ts',
+    },
+    {
+      name: 'ui-testing',
+      testDir: './tests/ui-tests',
+      testMatch: 'smokeUITests.spec.ts',
+      use: {
+        browserName: 'chromium'
+      }
+    }
   ],
 
 });

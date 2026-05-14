@@ -1,11 +1,11 @@
-import { test } from '../utils/fixtures';
-import { expect } from '../utils/custom-expect';
-import { APILogger } from '../utils/logger';
-import { createToken } from '../helpers/createToken';
-import { validateSchema } from '../utils/schema-validator';
-import articleRequestPayload from '../request-objects/POST-article.json'
+import { test } from '../../utils/fixtures';
+import { expect } from '../../utils/custom-expect';
+import { APILogger } from '../../utils/logger';
+import { createToken } from '../../helpers/createToken';
+import { validateSchema } from '../../utils/schema-validator';
+import articleRequestPayload from '../../request-objects/POST-article.json'
 import { faker } from '@faker-js/faker';
-import { getNewRandomArticle } from '../utils/data-generator';
+import { getNewRandomArticle } from '../../utils/data-generator';
 
 [
     { check: "eva - Blank - invalid", username: '', userErrorMessage: "can't be blank"},

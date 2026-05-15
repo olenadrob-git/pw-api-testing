@@ -49,7 +49,7 @@ async function generateNewSchema(responseBody:object, schemaPath:string) {
             addDateTimeFormat(generatedSchema)
             await fs.mkdir(path.dirname(schemaPath), {recursive: true})  // creates folder if itdoesn't exist 
             await fs.writeFile(schemaPath, JSON.stringify(generatedSchema, null, 4))
-        } catch (error) {
+        } catch (error: any) {
             throw new Error(`Failed to create schema file: ${error.message}`)
         }
 }

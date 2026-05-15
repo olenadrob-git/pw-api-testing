@@ -152,7 +152,7 @@ test('Create, Update and Delete', async ({api}) =>{
         .path('/articles')
         .body (articleRequest)
         .postRequest(201)
-    await expect(createArticleResponse).shouldMatchSchema('articles','POST_articles')  // provide third parameter true to create or update the schema    
+    await expect(createArticleResponse).shouldMatchSchema('articles','POST_articles', true)  // provide third parameter true to create or update the schema    
     expect(createArticleResponse.article.title).shouldEqual(articleTitle)
     const slugId = createArticleResponse.article.slug
     console.log(createArticleResponse.article.title)

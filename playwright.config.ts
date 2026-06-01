@@ -44,7 +44,7 @@ export default defineConfig({
     {
       name: 'api-testing',
       testDir: './tests/api-tests',
-      testMatch: ['example.spec.ts', 'negativeTests.spec.ts', 'harFlow.spec.ts'],
+      testMatch: ['example.spec.ts', 'negativeTests.spec.ts', 'harFlow.spec.ts', 'workingWithAPI.spec.ts' ],
       
       //dependencies: ['api-smoke-tests'], // api project will run only after smoke
     },

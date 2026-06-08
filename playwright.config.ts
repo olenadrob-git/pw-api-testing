@@ -42,9 +42,17 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: 'setup',
+      testMatch: ['auth.setup.ts'],
+    },
+    {
       name: 'api-testing',
       testDir: './tests/api-tests',
       testMatch: ['example.spec.ts', 'negativeTests.spec.ts', 'harFlow.spec.ts', 'workingWithAPI.spec.ts' ],
+      use: {
+        storageState: '.auth/user.json'
+      },
+      dependencies: ['setup'],
       
       //dependencies: ['api-smoke-tests'], // api project will run only after smoke
     },
@@ -52,14 +60,21 @@ export default defineConfig({
       name: 'api-smoke-tests',
       testDir: './tests/api-tests',
       testMatch: 'smokeTest.spec.ts',
+      use: {
+        storageState: '.auth/user.json'
+      },
+      dependencies: ['setup']
     },
     {
       name: 'ui-testing',
       testDir: './tests/ui-tests',
       testMatch: 'smokeUITests.spec.ts',
       use: {
-        browserName: 'chromium'
-      }
+        browserName: 'chromium',
+        storageState: '.auth/user.json',
+      },
+      dependencies: ['setup']
+
     }
   ],
 

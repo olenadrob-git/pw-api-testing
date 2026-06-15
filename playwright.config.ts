@@ -28,15 +28,15 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'retain-on-failure'
+    trace: 'retain-on-failure',
     
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
    
     
-    // extraHTTPHeaders: {
-    //   Authorization: 'dffgrergfrr'
-    // }
+      extraHTTPHeaders: {
+      'Authorization': `Token ${process.env.ACCESS_TOKEN}`
+      },
   },
 
   /* Configure projects for major browsers */

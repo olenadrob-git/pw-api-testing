@@ -46,6 +46,16 @@ export default defineConfig({
       testMatch: ['auth.setup.ts'],
     },
     {
+      name: 'articleSetup',
+      testMatch: 'newArticle.setup.ts',
+      dependencies: ['setup'],
+      teardown: 'articleCleanUp',
+    },
+    {
+      name: 'articleCleanUp',
+      testMatch: ['articleCleanUp.setup.ts'],
+    },
+    {
       name: 'api-testing',
       testDir: './tests/api-tests',
       testMatch: ['example.spec.ts', 'negativeTests.spec.ts', 'harFlow.spec.ts', 'workingWithAPI.spec.ts' ],
@@ -68,12 +78,23 @@ export default defineConfig({
     {
       name: 'ui-testing',
       testDir: './tests/ui-tests',
-      testMatch: 'smokeUITests.spec.ts',
+      //testMatch: 'smokeUITests.spec.ts',
       use: {
         browserName: 'chromium',
         storageState: '.auth/user.json',
       },
       dependencies: ['setup']
+
+    },
+    {
+      name: 'LikeCounter',
+      testDir: './tests/ui-tests',
+      testMatch: 'likesCounter.spec.ts',
+      use: {
+        browserName: 'chromium',
+        storageState: '.auth/user.json',
+      },
+      dependencies: ['articleSetup']
 
     }
   ],

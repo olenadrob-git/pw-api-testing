@@ -11,16 +11,11 @@ test.beforeEach('Run before each', async ({page} ) =>{
             body: JSON.stringify(tags)
         })
     })
-
-    
-        
+           
     await page.goto('https://conduit.bondaracademy.com/')
     
     //Login is moved to .auth
-   
-    
-    
-    
+ 
     console.log('This is executed before each test')
 })
 

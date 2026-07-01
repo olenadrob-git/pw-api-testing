@@ -7,7 +7,7 @@ const authFile = '.auth/user.json'
 setup('authentification', async({request}) => {
     fs.mkdirSync('.auth', { recursive: true });
 
-//UA authentification
+//UI authentification
     // await page.goto('https://conduit.bondaracademy.com/');
     // await page.getByRole('link', { name: 'Sign in' }).click();
     // await page.getByRole('textbox', { name: 'Email' }).fill('olenatest@test.com');
@@ -29,7 +29,7 @@ setup('authentification', async({request}) => {
 
     user.origins[0].localStorage[0].value = accessToken
     user.origins[0].localStorage[0].value = accessToken
-    fs.writeFileSync[authFile, JSON.stringify()]
+    fs.writeFileSync(authFile, JSON.stringify(user))
 
     process.env['ACCESS_TOKEN'] = accessToken
 })

@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
+console.log('Loading playwright.config.ts');
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -38,6 +40,9 @@ export default defineConfig({
       'Authorization': `Token ${process.env.ACCESS_TOKEN}`
       },
   },
+
+  globalSetup: require.resolve('./global-setup.ts'),
+  globalTeardown: './global-teardown.ts',
 
   /* Configure projects for major browsers */
   projects: [
@@ -87,6 +92,18 @@ export default defineConfig({
 
     },
     {
+      name: 'regression',
+      //testDir: './tests/ui-tests',
+      //testMatch: 'smokeUITests.spec.ts',
+      testIgnore: 'likesCounter.spec.ts',
+      use: {
+        browserName: 'chromium',
+        storageState: '.auth/user.json',
+      },
+      dependencies: ['setup']
+
+    },
+    {
       name: 'LikeCounter',
       testDir: './tests/ui-tests',
       testMatch: 'likesCounter.spec.ts',
@@ -96,6 +113,15 @@ export default defineConfig({
       },
       dependencies: ['articleSetup']
 
+    },
+    {
+      name: 'LikeCounterGlobal',
+      testDir: './tests/ui-tests',
+      testMatch: 'likesCounterGlobal.spec.ts',
+      use: {
+        browserName: 'chromium',
+        storageState: '.auth/user.json',
+      },
     }
   ],
 
